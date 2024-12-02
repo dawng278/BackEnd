@@ -1,6 +1,8 @@
 const express = require('express') // này là commonjs
 const path = require('path'); 
-require('dotenv').config()
+require('dotenv').config();
+const configViewEngine = require('./config/viewEngine');
+const webRoutes = require('./routes/web');
 // các dòng này là import thư viện vào để sử dụng :D
 // import express from 'express'; // này là es modules
 
@@ -10,22 +12,11 @@ const port = process.env.PORT || 8888; // port => hardcore nhập trực tiếp 
 const hostname = process.env.HOST_NAME;
 
 
-
 // config template engine
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs')
-
-//config static files
-app.use(express.static(path.join(__dirname, 'public')));
+configViewEngine(app);
 
 // khai báo route
-app.get('/', (req, res) => {
-  res.render('sample.ejs')
-})
-
-app.get('/abc', (req, res) => {
-  res.send('<h1>Check ABC</h1>')
-})
+app.use('/', webRoutes);
 
 app.listen(port, hostname, () => {
   console.log(`Example app listening on port ${port}`)
